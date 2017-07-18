@@ -1,0 +1,13 @@
+## Interface: 60000
+## Version: 1.1
+## Title: |cff1784d1ElvUI|r Wild Imps Tracker
+## Notes: Tracks Wild Imps.  Based on Imps by Kuni.
+## Author: Lockslap
+## X-Category: Warlock
+## X-License: MIT License
+## X-Curse-Packaged-Version: 1.1
+## X-Curse-Project-Name: ElvUI Wild Imps Tracker
+## X-Curse-Project-ID: elvui-wildimps
+## X-Curse-Repository-ID: wow/elvui-wildimps/mainline
+
+ElvUI_WildImps.lua

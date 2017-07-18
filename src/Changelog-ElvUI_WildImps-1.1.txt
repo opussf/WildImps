@@ -1,0 +1,19 @@
+------------------------------------------------------------------------
+r10 | lockslap | 2014-10-15 17:08:30 +0000 (Wed, 15 Oct 2014) | 1 line
+Changed paths:
+   A /tags/1.1 (from /trunk:9)
+
+Tagged as version 1.1.
+------------------------------------------------------------------------
+r9 | lockslap | 2014-10-15 17:08:08 +0000 (Wed, 15 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/ElvUI_WildImps.toc
+
+Updated TOC to patch 6.0.
+------------------------------------------------------------------------
+r8 | lockslap | 2013-10-12 19:40:01 +0000 (Sat, 12 Oct 2013) | 1 line
+Changed paths:
+   M /trunk/ElvUI_WildImps.lua
+
+Updated file headers.
+------------------------------------------------------------------------
