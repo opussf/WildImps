@@ -4,6 +4,9 @@ WILDIMPS_MSG_ADDONNAME = GetAddOnMetadata( WILDIMPS_SLUG, "Title" )
 WILDIMPS_MSG_AUTHOR = GetAddOnMetadata( WILDIMPS_SLUG, "Author" )
 WILDIMPS_MSG_VERSION = GetAddOnMetadata( WILDIMPS_SLUG, "Version" )
 
+COLOR_RED = "|cffff0000";
+COLOR_END = "|r";
+
 WildImps.impInfo = {}
 WildImps.impCount = 0
 WildImps.maxImps = 0
@@ -24,15 +27,15 @@ function WildImps.OnLoad()
 	WildImps.playerGUID = UnitGUID( "player" )
 	if WildImps.class == "Warlock" then
 		WildImpsFrame:RegisterEvent( "PLAYER_SPECIALIZATION_CHANGED" )
---		if GetSpecialization() == 2 then  -- 2 = Demo
---			WildImps.Print("Demo!")
---			WildImpsFrame:RegisterEvent( "COMBAT_LOG_EVENT_UNFILTERED")
---		else
---			WildImpsFrame:UnregisterEvent( "COMBAT_LOG_EVENT_UNFILTERED" )
---		end
---	else
---		WildImps.Print( "Silly "..WildImps.class..", you are not a Warlock." )
---		DisableAddOn( WILDIMPS_SLUG )
+		if GetSpecialization() == 2 then  -- 2 = Demo
+			WildImps.Print("Demo!")
+			WildImpsFrame:RegisterEvent( "COMBAT_LOG_EVENT_UNFILTERED")
+		else
+			WildImpsFrame:UnregisterEvent( "COMBAT_LOG_EVENT_UNFILTERED" )
+		end
+	else
+		WildImps.Print( "Silly "..WildImps.class..", you are not a Warlock." )
+		DisableAddOn( WILDIMPS_SLUG )
 	end
 end
 
