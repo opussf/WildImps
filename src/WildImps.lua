@@ -47,9 +47,9 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 			destID, destName, destFlags, _, spellID, spName, _, ext1, ext2, ext3 = CombatLogGetCurrentEventInfo()
 
 	-- New imp, lasts for 10 casts, or 12 seconds.
-	if combatEvent == "SPELL_SUMMON" && destName == "Wild Imp" && sourceID == WildImps.playerGUID then
-		WildImps.impInfo[destID] = {"time"=ets, "casts"=10}
-		impCount += 1
+	if combatEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
+		WildImps.impInfo[destID] = {["time"]=ets, ["casts"]=10}
+		WildImps.impCount = WildImps.impCount + 1
 		WildImps.Print( "Imp summonned: "..WildImps.impCount )
 	end
 

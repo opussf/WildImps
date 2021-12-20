@@ -13,4 +13,7 @@ end
 function test.after()
 end
 
+function test.test_1()
+end
+
 test.run()
