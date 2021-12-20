@@ -35,3 +35,12 @@ function WildImps.OnLoad()
 	end
 end
 
+function WildImps.CHARACTER_POINTS_CHANGED()
+end
+
+function WildImps.PLAYER_TALENT_UPDATE()
+end
+function WildImps.ACTIVE_TALENT_GROUP_CHANGED()
+end
+function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
+end
