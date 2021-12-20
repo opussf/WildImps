@@ -14,6 +14,7 @@ function test.before()
 	WildImps.impInfo = {}
 	WildImps.impCount = 0
 	WildImps.maxImps = 0
+	WildImps.OnLoad()
 end
 function test.after()
 end
@@ -47,16 +48,15 @@ function test.test_ChangeSpecialization()
 end
 
 function test.test_SummonImp_Mine()
-
-	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", "playerGUID", "testPlayer", 1297, 0,
-			"Creature-0", "Wild Imp", 68136, 0x0, 0 }
+	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "playerGUID", "testPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 0 }
 	WildImps.COMBAT_LOG_EVENT_UNFILTERED( )
 	for k,v in pairs( WildImps.impInfo ) do
-		print( k )
+		print( k, type(k), v["time"] )
 	end
-	--assertEquals( 0, WildImps.impInfo["Creature-0"]["time"])
-	--assertEquals( 10, WildImps.impInfo["Creature-0"]["casts"])
-	--assertEquals( 1, WildImps.impCount )
+	--print(WildImps.impInfo["Creature-0"]["time"])
+	assertEquals( 2876, WildImps.impInfo["Creature-0"]["time"])
+	assertEquals( 10, WildImps.impInfo["Creature-0"]["casts"])
+	assertEquals( 1, WildImps.impCount )
 
 end
 

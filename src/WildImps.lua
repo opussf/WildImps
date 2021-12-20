@@ -43,15 +43,14 @@ function WildImps.PLAYER_SPECIALIZATION_CHANGED()
 end
 
 function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
-	local ets, subEvent, sourceID, sourceName, sourceFlags, sourceRaidFlags,
+	local ets, subEvent, _, sourceID, sourceName, sourceFlags, sourceRaidFlags,
 			destID, destName, destFlags, _, spellID, spName, _, ext1, ext2, ext3 = CombatLogGetCurrentEventInfo()
 
-	print( subEvent..", "..destName..", "..sourceID..", "..destID)
 	-- New imp, lasts for 10 casts, or 12 seconds.
 	if subEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
 		WildImps.impInfo[destID] = {["time"]=ets, ["casts"]=10}
---		WildImps.impCount = WildImps.impCount + 1
---		WildImps.Print( "Imp summonned: "..WildImps.impCount )
+		WildImps.impCount = WildImps.impCount + 1
+		WildImps.Print( "Imp ("..destID..") summonned: "..WildImps.impCount )
 	end
 
 end
