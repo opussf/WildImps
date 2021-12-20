@@ -1,10 +1,13 @@
 -- WildImps @VERSION@
 WILDIMPS_SLUG, WildImps = ...
-WILDIMPS_MSG_VERSION = GetAddOnMetadata( IWILDIMPS_SLUG, "Version" )
-WILDIMPS_MSG_ADDONNAME = GetAddOnMetadata( IWILDIMPS_SLUG, "Title" )
+WILDIMPS_MSG_VERSION = GetAddOnMetadata( WILDIMPS_SLUG, "Version" )
+WILDIMPS_MSG_ADDONNAME = GetAddOnMetadata( WILDIMPS_SLUG, "Title" )
 WILDIMPS_MSG_AUTHOR = GetAddOnMetadata( WILDIMPS_SLUG, "Author" )
 
 WildImps = {}
+WildImps.impInfo = {}
+WildImps.impCount = 0
+WildImps.maxImps = 0
 
 -- Support code
 function WildImps.Print( msg, showName)
@@ -16,37 +19,120 @@ function WildImps.Print( msg, showName)
 	DEFAULT_CHAT_FRAME:AddMessage( msg );
 end
 
-
 -- Event code
 function WildImps.OnLoad()
 	WildImps.class = UnitClass( "player" )
-	if WildImps.class == "WARLOCK" then
-		WildImpsFrame:RegisterEvent( "CHARACTER_POINTS_CHANGED" )
-		WildImpsFrame:RegisterEvent( "PLAYER_TALENT_UPDATE" )
-		WildImpsFrame:RegisterEvent( "ACTIVE_TALENT_GROUP_CHANGED" )
+	WildImps.playerGUID = UnitGUID( "player" )
+	if WildImps.class == "Warlock" then
+		WildImpsFrame:RegisterEvent( "PLAYER_SPECIALIZATION_CHANGED" )
 		if GetSpecialization() == 2 then  -- 2 = Demo
+			WildImps.Print("Demo!")
 			WildImpsFrame:RegisterEvent( "COMBAT_LOG_EVENT_UNFILTERED")
 		else
 			WildImpsFrame:UnregisterEvent( "COMBAT_LOG_EVENT_UNFILTERED" )
 		end
 	else
-		WildImps.Print( "Silly "..class..", you are not a Warlock." )
+		WildImps.Print( "Silly "..WildImps.class..", you are not a Warlock." )
 		DisableAddOn( WILDIMPS_SLUG )
 	end
 end
 
-function WildImps.CHARACTER_POINTS_CHANGED()
-	WildImps.Print( "CHARACTER_POINTS_CHANGED" )
-end
-
-function WildImps.PLAYER_TALENT_UPDATE()
-	WildImps.Print( "PLAYER_TALENT_UPDATE" )
-end
-
-function WildImps.ACTIVE_TALENT_GROUP_CHANGED()
-	WildImps.Print( "ACTIVE_TALENT_GROUP_CHANGED" )
+function WildImps.PLAYER_SPECIALIZATION_CHANGED()
+	WildImps.Print( "PLAYER_SPECIALIZATION_CHANGED" )
+	WildImps.OnLoad()
 end
 
 function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
-	WildImps.Print( "COMBAT_LOG_EVENT_UNFILTERED" )
+	local _, ets, _, sourceID, sourceName, sourceFlags, sourceRaidFlags,
+			destID, destName, destFlags, _, spellID, spName, _, ext1, ext2, ext3 = CombatLogGetCurrentEventInfo()
+
+	-- New imp, lasts for 10 casts, or 12 seconds.
+	if combatEvent == "SPELL_SUMMON" && destName == "Wild Imp" && sourceID == WildImps.playerGUID then
+		WildImps.impInfo[destID] = {"time"=ets, "casts"=10}
+		impCount += 1
+		WildImps.Print( "Imp summonned: "..WildImps.impCount )
+	end
+
+
+
 end
+
+
+--[[
+function impGUI:COMBAT_LOG_EVENT_UNFILTERED(self, event, ...)
+	local compTime = GetTime()
+	local combatEvent = select(1, ...)
+	local sourceGUID = select(3, ...)
+	local sourceName = select(4, ...)
+	local destGUID = select(7, ...)
+	local destName = select(8, ...)
+
+	-- time out any imps (12 seconds)
+	for index, value in pairs(impTime) do
+		if (value + 12) < compTime then
+			impTime[index] = nil
+			impCount = impCount - 1
+
+			--print(("Imp timed out. Count: |cff00ff00%d|r"):format(impCount))
+		end
+	end
+
+  -- imp imploded
+	if combatEvent == "SPELL_INSTAKILL" and destName == "Wild Imp" and sourceGUID == playerGUID then
+		for index, value in pairs(impTime) do
+			if destGUID == index then
+				impTime[index] = nil
+				impCast[index] = nil
+				impCount = impCount - 1
+
+				--print(("Imp imploded. Count: |cff00ff00%d|r"):format(impCount))
+			end
+		end
+	end
+
+
+	-- imp died
+	if combatEvent == "UNIT_DIED" and (sourceName == "Wild Imp" or destName == "Wild Imp") then
+		for index, value in pairs(impTime) do
+			if destGUID == index then
+				impTime[index] = nil
+				impCast[index] = nil
+				impCount = impCount - 1
+
+				--print(("Imp died. Count: |cff00ff00%d|r"):format(impCount))
+			end
+		end
+	end
+
+	-- imp died from casting (10 casts)
+	if combatEvent == "SPELL_CAST_SUCCESS" and sourceName == "Wild Imp" then
+		for index,  value in pairs(impCast) do
+			if sourceGUID == index then
+				-- remove cast
+				impCast[index] = impCast[index] - 1
+
+				-- wild imp has casted 10 times so it dies
+				if impCast[index] == 0 then
+					impCast[index] = nil
+					impTime[index] = nil
+					impCount = impCount - 1
+
+					--print(("Imp casted 10 times and died. Count: |cff00ff00%d|r"):format(impCount))
+				end
+			end
+		end
+	end
+
+	-- imp summoned
+	if combatEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceGUID == playerGUID then
+		impTime[destGUID] = compTime
+		impCast[destGUID] = 10	-- each imp has 10 casts
+		impCount = impCount + 1
+
+		--print(("Imp spawned. Count: |cff00ff00%d|r"):format(impCount))
+	end
+
+	impCounter:SetText(impCount)
+end
+
+]]
