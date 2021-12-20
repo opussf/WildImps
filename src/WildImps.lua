@@ -46,6 +46,20 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 	local ets, subEvent, _, sourceID, sourceName, sourceFlags, sourceRaidFlags,
 			destID, destName, destFlags, _, spellID, spName, _, ext1, ext2, ext3 = CombatLogGetCurrentEventInfo()
 
+	if (destName and destName == "Wild Imp") or (sourceName and sourceName == "Wild Imp") then
+		WildImps.Print( subEvent )
+	end
+
+	-- Remove Imps
+	-- imp times out - no special event for this?
+	for impID, impData in pairs( WildImps.impInfo ) do
+		if impData["time"] + 12 < ets then
+			WildImps.impInfo[impID] = nil
+			WildImps.impCount = WildImps.impCount - 1
+			WildImps.Print( "Imp ("..impID..") timed out: "..WildImps.impCount )
+		end
+	end
+
 	-- New imp, lasts for 10 casts, or 12 seconds.
 	if destName and subEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
 		WildImps.impInfo[destID] = {["time"]=ets, ["casts"]=10}
@@ -54,6 +68,7 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 	end
 
 	-- Remove Imps (lower the count)
+	-- imp times out
 	-- imp imploded
 	if destName and subEvent == "SPELL_INSTAKILL" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
 		if WildImps.impInfo[destID] then -- imp is being tracked
