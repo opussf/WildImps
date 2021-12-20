@@ -47,12 +47,21 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 			destID, destName, destFlags, _, spellID, spName, _, ext1, ext2, ext3 = CombatLogGetCurrentEventInfo()
 
 	-- New imp, lasts for 10 casts, or 12 seconds.
-	if subEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
+	if destName and subEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
 		WildImps.impInfo[destID] = {["time"]=ets, ["casts"]=10}
 		WildImps.impCount = WildImps.impCount + 1
 		WildImps.Print( "Imp ("..destID..") summonned: "..WildImps.impCount )
 	end
 
+	-- Remove Imps (lower the count)
+	-- imp imploded
+	if destName and subEvent == "SPELL_INSTAKILL" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
+		if WildImps.impInfo[destID] then -- imp is being tracked
+			WildImps.impInfo[destID] = nil
+			WildImps.impCount = WildImps.impCount - 1
+			WildImps.Print( "Imp ("..destID..") imploded: "..WildImps.impCount )
+		end
+	end
 end
 
 
