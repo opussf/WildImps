@@ -28,7 +28,6 @@ function WildImps.OnLoad()
 	if WildImps.class == "Warlock" then
 		WildImpsFrame:RegisterEvent( "PLAYER_SPECIALIZATION_CHANGED" )
 		if GetSpecialization() == 2 then  -- 2 = Demo
-			WildImps.Print("Demo!")
 			WildImpsFrame:RegisterEvent( "COMBAT_LOG_EVENT_UNFILTERED")
 		else
 			WildImpsFrame:UnregisterEvent( "COMBAT_LOG_EVENT_UNFILTERED" )
@@ -39,27 +38,24 @@ function WildImps.OnLoad()
 	end
 end
 
---[[
 function WildImps.PLAYER_SPECIALIZATION_CHANGED()
-	WildImps.Print( "PLAYER_SPECIALIZATION_CHANGED" )
 	WildImps.OnLoad()
 end
 
 function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
-	local _, ets, _, sourceID, sourceName, sourceFlags, sourceRaidFlags,
+	local ets, subEvent, sourceID, sourceName, sourceFlags, sourceRaidFlags,
 			destID, destName, destFlags, _, spellID, spName, _, ext1, ext2, ext3 = CombatLogGetCurrentEventInfo()
 
+	print( subEvent..", "..destName..", "..sourceID..", "..destID)
 	-- New imp, lasts for 10 casts, or 12 seconds.
-	if combatEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
+	if subEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
 		WildImps.impInfo[destID] = {["time"]=ets, ["casts"]=10}
-		WildImps.impCount = WildImps.impCount + 1
-		WildImps.Print( "Imp summonned: "..WildImps.impCount )
+--		WildImps.impCount = WildImps.impCount + 1
+--		WildImps.Print( "Imp summonned: "..WildImps.impCount )
 	end
 
-
-
 end
-]]
+
 
 --[[
 function impGUI:COMBAT_LOG_EVENT_UNFILTERED(self, event, ...)
