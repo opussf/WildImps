@@ -1,0 +1,11 @@
+## Interface: @INTERFACE@
+## Title: WildImps
+## Notes: Track the number of WildImps (@VERSION@)
+## Author: sistersally of hyjal
+## Version: @VERSION@
+## Description: Shows number of WildImps
+## SavedVariables:
+## SavedVariablesPerCharacter:
+
+WildImps.lua
+WildImps.xml
