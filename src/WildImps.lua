@@ -36,11 +36,17 @@ function WildImps.OnLoad()
 end
 
 function WildImps.CHARACTER_POINTS_CHANGED()
+	WildImps.Print( "CHARACTER_POINTS_CHANGED" )
 end
 
 function WildImps.PLAYER_TALENT_UPDATE()
+	WildImps.Print( "PLAYER_TALENT_UPDATE" )
 end
+
 function WildImps.ACTIVE_TALENT_GROUP_CHANGED()
+	WildImps.Print( "ACTIVE_TALENT_GROUP_CHANGED" )
 end
+
 function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
+	WildImps.Print( "COMBAT_LOG_EVENT_UNFILTERED" )
 end
