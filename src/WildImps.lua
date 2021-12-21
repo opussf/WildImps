@@ -10,6 +10,7 @@ COLOR_END = "|r";
 WildImps.impInfo = {}
 WildImps.impCount = 0
 WildImps.maxImps = 0
+WildImps.TTL = 40
 
 -- Support code
 function WildImps.Print( msg, showName)
@@ -24,8 +25,8 @@ end
 -- Event code
 function WildImps.OnLoad()
 	WildImps.class = UnitClass( "player" )
-	WildImps.playerGUID = UnitGUID( "player" )
 	if WildImps.class == "Warlock" then
+		WildImps.playerGUID = UnitGUID( "player" )
 		WildImpsFrame:RegisterEvent( "PLAYER_SPECIALIZATION_CHANGED" )
 		if GetSpecialization() == 2 then  -- 2 = Demo
 			WildImpsFrame:RegisterEvent( "COMBAT_LOG_EVENT_UNFILTERED")
@@ -47,29 +48,52 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 			destID, destName, destFlags, _, spellID, spName, _, ext1, ext2, ext3 = CombatLogGetCurrentEventInfo()
 
 	if (destName and destName == "Wild Imp") or (sourceName and sourceName == "Wild Imp") then
-		WildImps.Print( subEvent )
+		--WildImps.Print( "Wild Imp: "..subEvent..": "..spName )
+	else
+		--WildImps.Print( subEvent..": s:"..(sourceName or "nil").." d:"..(destName or "nil") )
 	end
+
 
 	-- Remove Imps
 	-- imp times out - no special event for this?
 	for impID, impData in pairs( WildImps.impInfo ) do
-		if impData["time"] + 12 < ets then
+		if impData["time"] + WildImps.TTL < ets then
 			WildImps.impInfo[impID] = nil
 			WildImps.impCount = WildImps.impCount - 1
-			WildImps.Print( "Imp ("..impID..") timed out: "..WildImps.impCount )
+			--WildImps.Print( "Imp ("..impID..") timed out: "..WildImps.impCount )
+			WildImps.Print( "Imp Down ("..WildImps.impCount..")" )
+		end
+		if impData["casts"] == 0 then
+			WildImps.impInfo[impID] = nil
+			WildImps.impCount = WildImps.impCount - 1
+			--WildImps.Print( "Imp ("..impID..") cast their last.")
+			WildImps.Print( "Imp Down ("..WildImps.impCount..")" )
 		end
 	end
 
-	-- New imp, lasts for 10 casts, or 12 seconds.
+	-- New imp, lasts for 5 casts, or 40 seconds.
 	if destName and subEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
-		WildImps.impInfo[destID] = {["time"]=ets, ["casts"]=10}
+		WildImps.impInfo[destID] = {["time"]=ets, ["casts"]=5}
 		WildImps.impCount = WildImps.impCount + 1
-		WildImps.Print( "Imp ("..destID..") summonned: "..WildImps.impCount )
+		--WildImps.Print( "Imp ("..destID..") summonned: "..WildImps.impCount )
+		WildImps.Print( "Imp Up ("..WildImps.impCount..")" )
 	end
 
 	-- Remove Imps (lower the count)
+	-- imp casts
+	if subEvent == "SPELL_CAST_SUCCESS" and sourceName and sourceName == "Wild Imp" and WildImps.impInfo[sourceID] ~= nil then
+		WildImps.impInfo[sourceID]["casts"] = WildImps.impInfo[sourceID]["casts"] - 1
+		--WildImps.Print( "Imp ("..sourceID..") successfuly cast a spell, has "..WildImps.impInfo[sourceID]["casts"].." casts left.")
+	end
+
 	-- imp times out
 	-- imp imploded
+	if subEvent == "SPELL_CAST_SUCCESS" and spName == "Implosion" and sourceID == WildImps.playerGUID then
+		WildImps.Print("IMPLOSION!")
+		WildImps.impInfo = {}
+		WildImps.impCount = 0
+	end
+
 	if destName and subEvent == "SPELL_INSTAKILL" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
 		if WildImps.impInfo[destID] then -- imp is being tracked
 			WildImps.impInfo[destID] = nil
