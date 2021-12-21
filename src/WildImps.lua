@@ -61,6 +61,11 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 	if destName and subEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
 		WildImps.impInfo[destID] = {["time"]=ets, ["casts"]=5}
 		WildImps.impCount = WildImps.impCount + 1
+		if WildImps.impCount > WildImps.maxImps then
+			WildImps.maxImps = WildImps.impCount
+			local msg = WildImps.impCount.." Wild Imps!   MUHAHAHA"
+			SendChatMessage( msg, "SAY" )
+		end
 		--WildImps.Print( "Imp ("..destID..") summonned: "..WildImps.impCount )
 		WildImps.Print( "Imp Up ("..WildImps.impCount..")" )
 	end
