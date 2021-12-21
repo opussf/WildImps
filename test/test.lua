@@ -14,6 +14,7 @@ function test.before()
 	WildImps.impInfo = {}
 	WildImps.impCount = 0
 	WildImps.maxImps = 0
+	WildImps.OnLoad()
 end
 function test.after()
 end
@@ -45,19 +46,39 @@ end
 function test.test_ChangeSpecialization()
 	WildImps.PLAYER_SPECIALIZATION_CHANGED()
 end
-
 function test.test_SummonImp_Mine()
-
-	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", "playerGUID", "testPlayer", 1297, 0,
-			"Creature-0", "Wild Imp", 68136, 0x0, 0 }
+	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "playerGUID", "testPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 0, "sn" }
 	WildImps.COMBAT_LOG_EVENT_UNFILTERED( )
-	for k,v in pairs( WildImps.impInfo ) do
-		print( k )
-	end
-	assertEquals( 0, WildImps.impInfo["Creature-0"]["time"])
-	assertEquals( 10, WildImps.impInfo["Creature-0"]["casts"])
-	assertEquals( 1, WildImps.impCount )
 
+	assertEquals( 2876, WildImps.impInfo["Creature-0"]["time"])
+	assertEquals( 5, WildImps.impInfo["Creature-0"]["casts"])
+	assertEquals( 1, WildImps.impCount )
 end
+function test.test_SummonImp_NotMine()
+	-- Don't track imps if not yours
+	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "otherGUID", "miscPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 0, "sn" }
+	WildImps.COMBAT_LOG_EVENT_UNFILTERED( )
+
+	assertIsNil( WildImps.impInfo["Creature-0"] )
+	assertEquals( 0, WildImps.impCount )
+end
+function test.test_InstaKill_removesImp()   -- this is not a thing anymore?
+	WildImps.impCount = 1
+	WildImps.impInfo["Creature-0"]={["time"]=2870, ["casts"]=5}
+	CombatLogCurrentEventInfo = { 2876, "SPELL_INSTAKILL", true, "playerGUID", "testPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 0, "sn" }
+	WildImps.COMBAT_LOG_EVENT_UNFILTERED()
+
+	assertEquals( 0, WildImps.impCount )
+end
+function test.test_TimedOut_removesImp()
+	WildImps.impCount = 1
+	WildImps.impInfo["Creature-0"]={["time"]=time()-41, ["casts"]=5}
+	CombatLogCurrentEventInfo = { time(), "Some event", true, "blah", "blah", 1297, 0, "blah", "blah", 68136, 0x0, 0 }
+	WildImps.COMBAT_LOG_EVENT_UNFILTERED()
+
+	assertIsNil( WildImps.impInfo["Creature-0"] )
+	assertEquals( 0, WildImps.impCount )
+end
+
 
 test.run()
