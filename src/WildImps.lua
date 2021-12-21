@@ -10,6 +10,7 @@ COLOR_END = "|r";
 WildImps.impInfo = {}
 WildImps.impCount = 0
 WildImps.maxImps = 0
+WildImps.summonCount = 0
 WildImps.TTL = 40
 
 -- Support code
@@ -53,7 +54,7 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 		if (impData["time"] + WildImps.TTL < ets) or impData["casts"] == 0 then
 			WildImps.impInfo[impID] = nil
 			WildImps.impCount = WildImps.impCount - 1
-			WildImps.Print( "Imp Down ("..WildImps.impCount..")" )
+			--WildImps.Print( "Imp Down ("..WildImps.impCount..")" )
 		end
 	end
 
@@ -61,13 +62,14 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 	if destName and subEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
 		WildImps.impInfo[destID] = {["time"]=ets, ["casts"]=5}
 		WildImps.impCount = WildImps.impCount + 1
+		WildImps.summonCount = WildImps.summonCount + 1
 		if WildImps.impCount > WildImps.maxImps then
 			WildImps.maxImps = WildImps.impCount
 			local msg = WildImps.impCount.." Wild Imps!   MUHAHAHA"
 			SendChatMessage( msg, "SAY" )
 		end
 		--WildImps.Print( "Imp ("..destID..") summonned: "..WildImps.impCount )
-		WildImps.Print( "Imp Up ("..WildImps.impCount..")" )
+		WildImps.Print( "Imp Up ("..WildImps.impCount.."/"..WildImps.maxImps..") ("..WildImps.summonCount..")" )
 	end
 
 	-- Remove Imps (lower the count)
@@ -80,7 +82,7 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 	-- imp times out
 	-- imp imploded
 	if subEvent == "SPELL_CAST_SUCCESS" and spName == "Implosion" and sourceID == WildImps.playerGUID then
-		WildImps.Print("IMPLOSION!")
+		--WildImps.Print("IMPLOSION!")
 		WildImps.impInfo = {}
 		WildImps.impCount = 0
 	end
