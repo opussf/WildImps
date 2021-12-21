@@ -9,7 +9,7 @@ COLOR_END = "|r";
 
 WildImps.impInfo = {}
 WildImps.impCount = 0
-WildImps.maxImps = 0
+WildImps.maxImps = 3
 WildImps.summonCount = 0
 WildImps.TTL = 40
 
