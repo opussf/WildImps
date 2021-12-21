@@ -88,6 +88,7 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 		--WildImps.Print("IMPLOSION!")
 		WildImps.impInfo = {}
 		WildImps.impCount = 0
+		WildImps.Print( "IMP ZERO! ("..WildImps.summonCount..")" )
 	end
 
 end
