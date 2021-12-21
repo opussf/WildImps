@@ -62,14 +62,6 @@ function test.test_SummonImp_NotMine()
 	assertIsNil( WildImps.impInfo["Creature-0"] )
 	assertEquals( 0, WildImps.impCount )
 end
-function test.test_InstaKill_removesImp()   -- this is not a thing anymore?
-	WildImps.impCount = 1
-	WildImps.impInfo["Creature-0"]={["time"]=2870, ["casts"]=5}
-	CombatLogCurrentEventInfo = { 2876, "SPELL_INSTAKILL", true, "playerGUID", "testPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 0, "sn" }
-	WildImps.COMBAT_LOG_EVENT_UNFILTERED()
-
-	assertEquals( 0, WildImps.impCount )
-end
 function test.test_TimedOut_removesImp()
 	WildImps.impCount = 1
 	WildImps.impInfo["Creature-0"]={["time"]=time()-41, ["casts"]=5}
