@@ -54,6 +54,8 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 		if (impData["time"] + WildImps.TTL < ets) or impData["casts"] == 0 then
 			WildImps.impInfo[impID] = nil
 			WildImps.impCount = WildImps.impCount - 1
+			if WildImps.impCount == 0 then
+				WildImps.Print( "IMP ZERO! ("..WildImps.summonCount..")" )
 			--WildImps.Print( "Imp Down ("..WildImps.impCount..")" )
 		end
 	end
@@ -69,7 +71,7 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 			SendChatMessage( msg, "SAY" )
 		end
 		--WildImps.Print( "Imp ("..destID..") summonned: "..WildImps.impCount )
-		WildImps.Print( "Imp Up ("..WildImps.impCount.."/"..WildImps.maxImps..") ("..WildImps.summonCount..")" )
+		WildImps.Print( "Imp Up ( "..WildImps.impCount.." / "..WildImps.maxImps.." / "..WildImps.summonCount.." )" )
 	end
 
 	-- Remove Imps (lower the count)
