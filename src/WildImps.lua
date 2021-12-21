@@ -56,6 +56,7 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 			WildImps.impCount = WildImps.impCount - 1
 			if WildImps.impCount == 0 then
 				WildImps.Print( "IMP ZERO! ("..WildImps.summonCount..")" )
+			end
 			--WildImps.Print( "Imp Down ("..WildImps.impCount..")" )
 		end
 	end
