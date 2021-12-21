@@ -47,26 +47,12 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 	local ets, subEvent, _, sourceID, sourceName, sourceFlags, sourceRaidFlags,
 			destID, destName, destFlags, _, spellID, spName, _, ext1, ext2, ext3 = CombatLogGetCurrentEventInfo()
 
-	if (destName and destName == "Wild Imp") or (sourceName and sourceName == "Wild Imp") then
-		--WildImps.Print( "Wild Imp: "..subEvent..": "..spName )
-	else
-		--WildImps.Print( subEvent..": s:"..(sourceName or "nil").." d:"..(destName or "nil") )
-	end
-
-
 	-- Remove Imps
 	-- imp times out - no special event for this?
 	for impID, impData in pairs( WildImps.impInfo ) do
-		if impData["time"] + WildImps.TTL < ets then
+		if (impData["time"] + WildImps.TTL < ets) or impData["casts"] == 0 then
 			WildImps.impInfo[impID] = nil
 			WildImps.impCount = WildImps.impCount - 1
-			--WildImps.Print( "Imp ("..impID..") timed out: "..WildImps.impCount )
-			WildImps.Print( "Imp Down ("..WildImps.impCount..")" )
-		end
-		if impData["casts"] == 0 then
-			WildImps.impInfo[impID] = nil
-			WildImps.impCount = WildImps.impCount - 1
-			--WildImps.Print( "Imp ("..impID..") cast their last.")
 			WildImps.Print( "Imp Down ("..WildImps.impCount..")" )
 		end
 	end
