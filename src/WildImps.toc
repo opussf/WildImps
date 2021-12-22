@@ -6,5 +6,6 @@
 ## Description: Shows number of WildImps
 ## SavedVariables:
 ## SavedVariablesPerCharacter:
-WildImps.lua
 WildImps.xml
+WildImps.lua
+
