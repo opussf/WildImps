@@ -48,19 +48,6 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 	local ets, subEvent, _, sourceID, sourceName, sourceFlags, sourceRaidFlags,
 			destID, destName, destFlags, _, spellID, spName, _, ext1, ext2, ext3 = CombatLogGetCurrentEventInfo()
 
-	-- Remove Imps
-	-- imp times out - no special event for this?
-	for impID, impData in pairs( WildImps.impInfo ) do
-		if (impData["time"] + WildImps.TTL < ets) or impData["casts"] == 0 then
-			WildImps.impInfo[impID] = nil
-			WildImps.impCount = WildImps.impCount - 1
-			if WildImps.impCount == 0 then
-				WildImps.Print( "IMP ZERO! ("..WildImps.summonCount..")" )
-			end
-			--WildImps.Print( "Imp Down ("..WildImps.impCount..")" )
-		end
-	end
-
 	-- New imp, lasts for 5 casts, or 40 seconds.
 	if destName and subEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
 		WildImps.impInfo[destID] = {["time"]=ets, ["casts"]=5}
@@ -91,4 +78,16 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 		WildImps.Print( "IMP ZERO! ("..WildImps.summonCount..")" )
 	end
 
+	-- Remove Imps
+	-- imp times out - no special event for this?
+	for impID, impData in pairs( WildImps.impInfo ) do
+		if (impData["time"] + WildImps.TTL < ets) or impData["casts"] == 0 then
+			WildImps.impInfo[impID] = nil
+			WildImps.impCount = WildImps.impCount - 1
+			if WildImps.impCount == 0 then
+				WildImps.Print( "IMP ZERO! ("..WildImps.summonCount..")" )
+			end
+			--WildImps.Print( "Imp Down ("..WildImps.impCount..")" )
+		end
+	end
 end
