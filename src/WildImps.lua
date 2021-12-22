@@ -32,11 +32,9 @@ function WildImps.PLAYER_ENTERING_WORLD()
 	WildImps.class = UnitClass( "player" )
 	if WildImps.class == "Warlock" then
 		WildImps.playerGUID = UnitGUID( "player" )
-		WildImps.Print( WildImps.playerGUID )
 		WildImpsFrame:RegisterEvent( "PLAYER_SPECIALIZATION_CHANGED" )
 		if GetSpecialization() == 2 then  -- 2 = Demo
 			WildImpsFrame:RegisterEvent( "COMBAT_LOG_EVENT_UNFILTERED")
-			WildImps.Print( "Watching COMBAT_LOG" )
 		else
 			WildImpsFrame:UnregisterEvent( "COMBAT_LOG_EVENT_UNFILTERED" )
 		end
@@ -58,7 +56,6 @@ function WildImps.OnUpdate()
 end
 
 function WildImps.PLAYER_SPECIALIZATION_CHANGED()
-	WildImps.Print( "PLAYER_SPECIALIZATION_CHANGED" )
 	WildImps.PLAYER_ENTERING_WORLD()
 end
 
