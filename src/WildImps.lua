@@ -9,7 +9,8 @@ COLOR_END = "|r";
 
 WildImps.impInfo = {}
 WildImps.impCount = 0
-WildImps.maxImps = 0
+WildImps.maxImps = 3
+WildImps.summonCount = 0
 WildImps.TTL = 40
 
 -- Support code
@@ -47,36 +48,18 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 	local ets, subEvent, _, sourceID, sourceName, sourceFlags, sourceRaidFlags,
 			destID, destName, destFlags, _, spellID, spName, _, ext1, ext2, ext3 = CombatLogGetCurrentEventInfo()
 
-	if (destName and destName == "Wild Imp") or (sourceName and sourceName == "Wild Imp") then
-		--WildImps.Print( "Wild Imp: "..subEvent..": "..spName )
-	else
-		--WildImps.Print( subEvent..": s:"..(sourceName or "nil").." d:"..(destName or "nil") )
-	end
-
-
-	-- Remove Imps
-	-- imp times out - no special event for this?
-	for impID, impData in pairs( WildImps.impInfo ) do
-		if impData["time"] + WildImps.TTL < ets then
-			WildImps.impInfo[impID] = nil
-			WildImps.impCount = WildImps.impCount - 1
-			--WildImps.Print( "Imp ("..impID..") timed out: "..WildImps.impCount )
-			WildImps.Print( "Imp Down ("..WildImps.impCount..")" )
-		end
-		if impData["casts"] == 0 then
-			WildImps.impInfo[impID] = nil
-			WildImps.impCount = WildImps.impCount - 1
-			--WildImps.Print( "Imp ("..impID..") cast their last.")
-			WildImps.Print( "Imp Down ("..WildImps.impCount..")" )
-		end
-	end
-
 	-- New imp, lasts for 5 casts, or 40 seconds.
 	if destName and subEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
 		WildImps.impInfo[destID] = {["time"]=ets, ["casts"]=5}
 		WildImps.impCount = WildImps.impCount + 1
+		WildImps.summonCount = WildImps.summonCount + 1
+		if WildImps.impCount > WildImps.maxImps then
+			WildImps.maxImps = WildImps.impCount
+			local msg = WildImps.impCount.." Wild Imps!   MUHAHAHA"
+			SendChatMessage( msg, "SAY" )
+		end
 		--WildImps.Print( "Imp ("..destID..") summonned: "..WildImps.impCount )
-		WildImps.Print( "Imp Up ("..WildImps.impCount..")" )
+		WildImps.Print( "Imp Up ( "..WildImps.impCount.." / "..WildImps.maxImps.." / "..WildImps.summonCount.." )" )
 	end
 
 	-- Remove Imps (lower the count)
@@ -89,96 +72,22 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 	-- imp times out
 	-- imp imploded
 	if subEvent == "SPELL_CAST_SUCCESS" and spName == "Implosion" and sourceID == WildImps.playerGUID then
-		WildImps.Print("IMPLOSION!")
+		--WildImps.Print("IMPLOSION!")
 		WildImps.impInfo = {}
 		WildImps.impCount = 0
+		WildImps.Print( "IMP ZERO! ("..WildImps.summonCount..")" )
 	end
 
-	if destName and subEvent == "SPELL_INSTAKILL" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
-		if WildImps.impInfo[destID] then -- imp is being tracked
-			WildImps.impInfo[destID] = nil
+	-- Remove Imps
+	-- imp times out - no special event for this?
+	for impID, impData in pairs( WildImps.impInfo ) do
+		if (impData["time"] + WildImps.TTL < ets) or impData["casts"] == 0 then
+			WildImps.impInfo[impID] = nil
 			WildImps.impCount = WildImps.impCount - 1
-			WildImps.Print( "Imp ("..destID..") imploded: "..WildImps.impCount )
+			if WildImps.impCount == 0 then
+				WildImps.Print( "IMP ZERO! ("..WildImps.summonCount..")" )
+			end
+			--WildImps.Print( "Imp Down ("..WildImps.impCount..")" )
 		end
 	end
 end
-
-
---[[
-function impGUI:COMBAT_LOG_EVENT_UNFILTERED(self, event, ...)
-	local compTime = GetTime()
-	local combatEvent = select(1, ...)
-	local sourceGUID = select(3, ...)
-	local sourceName = select(4, ...)
-	local destGUID = select(7, ...)
-	local destName = select(8, ...)
-
-	-- time out any imps (12 seconds)
-	for index, value in pairs(impTime) do
-		if (value + 12) < compTime then
-			impTime[index] = nil
-			impCount = impCount - 1
-
-			--print(("Imp timed out. Count: |cff00ff00%d|r"):format(impCount))
-		end
-	end
-
-  -- imp imploded
-	if combatEvent == "SPELL_INSTAKILL" and destName == "Wild Imp" and sourceGUID == playerGUID then
-		for index, value in pairs(impTime) do
-			if destGUID == index then
-				impTime[index] = nil
-				impCast[index] = nil
-				impCount = impCount - 1
-
-				--print(("Imp imploded. Count: |cff00ff00%d|r"):format(impCount))
-			end
-		end
-	end
-
-
-	-- imp died
-	if combatEvent == "UNIT_DIED" and (sourceName == "Wild Imp" or destName == "Wild Imp") then
-		for index, value in pairs(impTime) do
-			if destGUID == index then
-				impTime[index] = nil
-				impCast[index] = nil
-				impCount = impCount - 1
-
-				--print(("Imp died. Count: |cff00ff00%d|r"):format(impCount))
-			end
-		end
-	end
-
-	-- imp died from casting (10 casts)
-	if combatEvent == "SPELL_CAST_SUCCESS" and sourceName == "Wild Imp" then
-		for index,  value in pairs(impCast) do
-			if sourceGUID == index then
-				-- remove cast
-				impCast[index] = impCast[index] - 1
-
-				-- wild imp has casted 10 times so it dies
-				if impCast[index] == 0 then
-					impCast[index] = nil
-					impTime[index] = nil
-					impCount = impCount - 1
-
-					--print(("Imp casted 10 times and died. Count: |cff00ff00%d|r"):format(impCount))
-				end
-			end
-		end
-	end
-
-	-- imp summoned
-	if combatEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceGUID == playerGUID then
-		impTime[destGUID] = compTime
-		impCast[destGUID] = 10	-- each imp has 10 casts
-		impCount = impCount + 1
-
-		--print(("Imp spawned. Count: |cff00ff00%d|r"):format(impCount))
-	end
-
-	impCounter:SetText(impCount)
-end
-
-]]
