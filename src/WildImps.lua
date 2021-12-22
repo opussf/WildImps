@@ -28,6 +28,7 @@ function WildImps.OnLoad()
 	WildImpsFrame:RegisterEvent( "ADDON_LOADED" )
 end
 function WildImps.ADDON_LOADED()
+	WildImpsFrame:UnregisterEvent( "ADDON_LOADED" )
 	WildImps.class = UnitClass( "player" )
 	if WildImps.class == "Warlock" then
 		WildImps.playerGUID = UnitGUID( "player" )

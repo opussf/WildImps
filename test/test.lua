@@ -16,6 +16,7 @@ function test.before()
 	WildImps.maxImps = 0
 	WildImps.summonCount = 0
 	WildImps.OnLoad()
+	WildImps.ADDON_LOADED()
 end
 function test.after()
 end
