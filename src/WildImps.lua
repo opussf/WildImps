@@ -40,6 +40,17 @@ function WildImps.OnLoad()
 	end
 end
 
+function WildImps.OnUpdate()
+	if WildImps.impCount > 0 then
+		WildImps_ImpCountBar:Show()
+		WildImps_ImpCountBar:SetMinMaxValues( 0, WildImps.maxImps )
+		WildImps_ImpCountBar:SetValue( WildImps.impCount )
+		WildImps_WildImps_ImpCountBarText:SetText( WildImps.impCount.."::"..WildImps.summonCount )
+	else
+		WildImps_ImpCountBar:Hide()
+	end
+end
+
 function WildImps.PLAYER_SPECIALIZATION_CHANGED()
 	WildImps.OnLoad()
 end

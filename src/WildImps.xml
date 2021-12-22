@@ -4,6 +4,37 @@
 	<Script file="WildImps.lua"/>
 	<!-- Version 1.4 -->
 	<Frame name="WildImpsFrame" frameStrata="BACKGROUND" toplevel="false" enableMouse="false" movable="false" parent="UIParent">
+		<Frames>
+			<StatusBar name="WildImps_ImpCountBar" inherits="TextStatusBar">
+				<Size>
+					<AbsDimension x="190" y="12" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parent" relativePoint="TOP">
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="LOW">
+						<FontString name="WildImps_ImpCountBarText" inherits="GameFontNormal" wraponspaces="false">
+							<Anchors>
+								<Anchor point="CENTER">
+								</Anchor>
+							</Anchors>
+							<Color r="1" g="1" b="1"/>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad> <!-- artwork -->
+						WildImps_ImpCountBar:SetFrameLevel( 0 );
+						WildImps_ImpCountBar:SetAlpha(1.0);
+						WildImps_ImpCountBar:Hide();
+					</OnLoad>
+				</Scripts>
+				<BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+				<BarColor r="0.5" g="0.5" b="0"/>
+			</StatusBar>
+		</Frames>
 		<Scripts>
 			<OnLoad>
 				WildImps.OnLoad();
@@ -11,7 +42,9 @@
 			<OnEvent>
 				WildImps[event](self, ...);
 			</OnEvent>
+			<OnUpdate>
+				WildImps.OnUpdate();
+			</OnUpdate>
 		</Scripts>
 	</Frame>
 </Ui>
-
