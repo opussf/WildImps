@@ -18,13 +18,16 @@ function WildImps.Print( msg, showName)
 	-- print to the chat frame
 	-- set showName to false to suppress the addon name printing
 	if (showName == nil) or (showName) then
-		msg = COLOR_RED.."WildImps".."> "..COLOR_END..msg;
+		msg = COLOR_RED..WILDIMPS_MSG_ADDONNAME.."> "..COLOR_END..msg;
 	end
 	DEFAULT_CHAT_FRAME:AddMessage( msg );
 end
 
 -- Event code
 function WildImps.OnLoad()
+	WildImpsFrame:RegisterEvent( "ADDON_LOADED" )
+end
+function WildImps.ADDON_LOADED()
 	WildImps.class = UnitClass( "player" )
 	if WildImps.class == "Warlock" then
 		WildImps.playerGUID = UnitGUID( "player" )
@@ -45,7 +48,7 @@ function WildImps.OnUpdate()
 		WildImps_ImpCountBar:Show()
 		WildImps_ImpCountBar:SetMinMaxValues( 0, WildImps.maxImps )
 		WildImps_ImpCountBar:SetValue( WildImps.impCount )
-		WildImps_WildImps_ImpCountBarText:SetText( WildImps.impCount.."::"..WildImps.summonCount )
+		WildImps_ImpCountBarText:SetText( WildImps.impCount.." / "..WildImps.maxImps.." :: "..WildImps.summonCount )
 	else
 		WildImps_ImpCountBar:Hide()
 	end

@@ -4,6 +4,12 @@
 	<Script file="WildImps.lua"/>
 	<!-- Version 1.4 -->
 	<Frame name="WildImpsFrame" frameStrata="BACKGROUND" toplevel="false" enableMouse="false" movable="false" parent="UIParent">
+		<Size>
+			<AbsDimension x="200" y="12"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT"/>
+		</Anchors>
 		<Frames>
 			<StatusBar name="WildImps_ImpCountBar" inherits="TextStatusBar">
 				<Size>
