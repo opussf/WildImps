@@ -25,16 +25,18 @@ end
 
 -- Event code
 function WildImps.OnLoad()
-	WildImpsFrame:RegisterEvent( "ADDON_LOADED" )
+	WildImpsFrame:RegisterEvent( "PLAYER_ENTERING_WORLD" )
 end
-function WildImps.ADDON_LOADED()
-	WildImpsFrame:UnregisterEvent( "ADDON_LOADED" )
+function WildImps.PLAYER_ENTERING_WORLD()
+	WildImpsFrame:UnregisterEvent( "PLAYER_ENTERING_WORLD" )
 	WildImps.class = UnitClass( "player" )
 	if WildImps.class == "Warlock" then
 		WildImps.playerGUID = UnitGUID( "player" )
+		WildImps.Print( WildImps.playerGUID )
 		WildImpsFrame:RegisterEvent( "PLAYER_SPECIALIZATION_CHANGED" )
 		if GetSpecialization() == 2 then  -- 2 = Demo
 			WildImpsFrame:RegisterEvent( "COMBAT_LOG_EVENT_UNFILTERED")
+			WildImps.Print( "Watching COMBAT_LOG" )
 		else
 			WildImpsFrame:UnregisterEvent( "COMBAT_LOG_EVENT_UNFILTERED" )
 		end
@@ -56,7 +58,8 @@ function WildImps.OnUpdate()
 end
 
 function WildImps.PLAYER_SPECIALIZATION_CHANGED()
-	WildImps.OnLoad()
+	WildImps.Print( "PLAYER_SPECIALIZATION_CHANGED" )
+	WildImps.PLAYER_ENTERING_WORLD()
 end
 
 function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
