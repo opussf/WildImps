@@ -16,6 +16,7 @@ function test.before()
 	WildImps.maxImps = 0
 	WildImps.summonCount = 0
 	WildImps.OnLoad()
+	WildImps.PLAYER_ENTERING_WORLD()
 end
 function test.after()
 end
