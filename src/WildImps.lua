@@ -18,13 +18,17 @@ function WildImps.Print( msg, showName)
 	-- print to the chat frame
 	-- set showName to false to suppress the addon name printing
 	if (showName == nil) or (showName) then
-		msg = COLOR_RED.."WildImps".."> "..COLOR_END..msg;
+		msg = COLOR_RED..WILDIMPS_MSG_ADDONNAME.."> "..COLOR_END..msg;
 	end
 	DEFAULT_CHAT_FRAME:AddMessage( msg );
 end
 
 -- Event code
 function WildImps.OnLoad()
+	WildImpsFrame:RegisterEvent( "PLAYER_ENTERING_WORLD" )
+end
+function WildImps.PLAYER_ENTERING_WORLD()
+	WildImpsFrame:UnregisterEvent( "PLAYER_ENTERING_WORLD" )
 	WildImps.class = UnitClass( "player" )
 	if WildImps.class == "Warlock" then
 		WildImps.playerGUID = UnitGUID( "player" )
@@ -40,8 +44,19 @@ function WildImps.OnLoad()
 	end
 end
 
+function WildImps.OnUpdate()
+	if WildImps.impCount > 0 then
+		WildImps_ImpCountBar:Show()
+		WildImps_ImpCountBar:SetMinMaxValues( 0, WildImps.maxImps )
+		WildImps_ImpCountBar:SetValue( WildImps.impCount )
+		WildImps_ImpCountBarText:SetText( WildImps.impCount.." / "..WildImps.maxImps.." :: "..WildImps.summonCount )
+	else
+		WildImps_ImpCountBar:Hide()
+	end
+end
+
 function WildImps.PLAYER_SPECIALIZATION_CHANGED()
-	WildImps.OnLoad()
+	WildImps.PLAYER_ENTERING_WORLD()
 end
 
 function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
@@ -59,7 +74,7 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 			SendChatMessage( msg, "SAY" )
 		end
 		--WildImps.Print( "Imp ("..destID..") summonned: "..WildImps.impCount )
-		WildImps.Print( "Imp Up ( "..WildImps.impCount.." / "..WildImps.maxImps.." / "..WildImps.summonCount.." )" )
+		--WildImps.Print( "Imp Up ( "..WildImps.impCount.." / "..WildImps.maxImps.." / "..WildImps.summonCount.." )" )
 	end
 
 	-- Remove Imps (lower the count)
@@ -75,7 +90,7 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 		--WildImps.Print("IMPLOSION!")
 		WildImps.impInfo = {}
 		WildImps.impCount = 0
-		WildImps.Print( "IMP ZERO! ("..WildImps.summonCount..")" )
+		--WildImps.Print( "IMP ZERO! ("..WildImps.summonCount..")" )
 	end
 
 	-- Remove Imps
@@ -84,9 +99,9 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 		if (impData["time"] + WildImps.TTL < ets) or impData["casts"] == 0 then
 			WildImps.impInfo[impID] = nil
 			WildImps.impCount = WildImps.impCount - 1
-			if WildImps.impCount == 0 then
-				WildImps.Print( "IMP ZERO! ("..WildImps.summonCount..")" )
-			end
+			--if WildImps.impCount == 0 then
+			--	WildImps.Print( "IMP ZERO! ("..WildImps.summonCount..")" )
+			--end
 			--WildImps.Print( "Imp Down ("..WildImps.impCount..")" )
 		end
 	end
