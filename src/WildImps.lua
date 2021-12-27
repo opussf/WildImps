@@ -63,10 +63,8 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 	local ets, subEvent, _, sourceID, sourceName, sourceFlags, sourceRaidFlags,
 			destID, destName, destFlags, _, spellID, spName, _, ext1, ext2, ext3 = CombatLogGetCurrentEventInfo()
 
-	-- New imp, lasts for 5 casts, or 40 seconds.
+	-- New imp, lasts for 5 casts, or seconds defined by which spell summons them.
 	if destName and subEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
-		WildImps.Print("SpellID: "..spellID)
-
 		WildImps.impInfo[destID] = {["time"]=ets+WildImps.TTLBySpell[spellID], ["casts"]=5}
 		WildImps.impCount = WildImps.impCount + 1
 		WildImps.summonCount = WildImps.summonCount + 1
