@@ -137,5 +137,11 @@ function test.test_Implosion_0Count()
 
 	assertEquals( 0, WildImps.impCount )
 end
+function test.test_SummonImp_Mine_Talent_setTime()
+	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "playerGUID", "testPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 279910, "sn" }
+	WildImps.COMBAT_LOG_EVENT_UNFILTERED( )
+
+	assertEquals( 2876+24, WildImps.impInfo["Creature-0"]["time"])
+end
 
 test.run()
