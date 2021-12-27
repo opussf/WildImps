@@ -15,6 +15,7 @@ function test.before()
 	WildImps.impCount = 0
 	WildImps.maxImps = 0
 	WildImps.summonCount = 0
+	--WildImps_ImpCountBar.Hide()
 	WildImps.OnLoad()
 	WildImps.PLAYER_ENTERING_WORLD()
 end
@@ -49,38 +50,38 @@ function test.test_ChangeSpecialization()
 	WildImps.PLAYER_SPECIALIZATION_CHANGED()
 end
 function test.test_SummonImp_Mine_setTime()
-	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "playerGUID", "testPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 0, "sn" }
+	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "playerGUID", "testPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 104317, "sn" }
 	WildImps.COMBAT_LOG_EVENT_UNFILTERED( )
 
-	assertEquals( 2876, WildImps.impInfo["Creature-0"]["time"])
+	assertEquals( 2876+40, WildImps.impInfo["Creature-0"]["time"])
 end
 function test.test_SummonImp_Mine_setCasts()
-	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "playerGUID", "testPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 0, "sn" }
+	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "playerGUID", "testPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 104317, "sn" }
 	WildImps.COMBAT_LOG_EVENT_UNFILTERED( )
 
 	assertEquals( 5, WildImps.impInfo["Creature-0"]["casts"])
 end
 function test.test_SummonImp_Mine_setCount()
-	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "playerGUID", "testPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 0, "sn" }
+	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "playerGUID", "testPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 104317, "sn" }
 	WildImps.COMBAT_LOG_EVENT_UNFILTERED( )
 
 	assertEquals( 1, WildImps.impCount )
 end
 function test.test_SummonImp_Mine_setMax()
-	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "playerGUID", "testPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 0, "sn" }
+	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "playerGUID", "testPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 104317, "sn" }
 	WildImps.COMBAT_LOG_EVENT_UNFILTERED( )
 
 	assertEquals( 1, WildImps.maxImps )
 end
 function test.test_SummonImp_Mine_setSummonCount()
-	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "playerGUID", "testPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 0, "sn" }
+	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "playerGUID", "testPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 104317, "sn" }
 	WildImps.COMBAT_LOG_EVENT_UNFILTERED( )
 
 	assertEquals( 1, WildImps.summonCount )
 end
 function test.test_SummonImp_NotMine()
 	-- Don't track imps if not yours
-	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "otherGUID", "miscPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 0, "sn" }
+	CombatLogCurrentEventInfo = { 2876, "SPELL_SUMMON", true, "otherGUID", "miscPlayer", 1297, 0, "Creature-0", "Wild Imp", 68136, 0x0, 104317, "sn" }
 	WildImps.COMBAT_LOG_EVENT_UNFILTERED( )
 
 	assertIsNil( WildImps.impInfo["Creature-0"] )
