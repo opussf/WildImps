@@ -11,7 +11,7 @@ WildImps.impInfo = {}
 WildImps.impCount = 0
 WildImps.maxImps = 3
 WildImps.summonCount = 0
-WildImps.TTL = 40
+WildImps.TTLBySpell = {[104317]=40, [279910]=14}
 
 -- Support code
 function WildImps.Print( msg, showName)
@@ -63,9 +63,9 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 	local ets, subEvent, _, sourceID, sourceName, sourceFlags, sourceRaidFlags,
 			destID, destName, destFlags, _, spellID, spName, _, ext1, ext2, ext3 = CombatLogGetCurrentEventInfo()
 
-	-- New imp, lasts for 5 casts, or 40 seconds.
+	-- New imp, lasts for 5 casts, or seconds defined by which spell summons them.
 	if destName and subEvent == "SPELL_SUMMON" and destName == "Wild Imp" and sourceID == WildImps.playerGUID then
-		WildImps.impInfo[destID] = {["time"]=ets, ["casts"]=5}
+		WildImps.impInfo[destID] = {["time"]=ets+WildImps.TTLBySpell[spellID], ["casts"]=5}
 		WildImps.impCount = WildImps.impCount + 1
 		WildImps.summonCount = WildImps.summonCount + 1
 		if WildImps.impCount > WildImps.maxImps then
@@ -96,7 +96,7 @@ function WildImps.COMBAT_LOG_EVENT_UNFILTERED()
 	-- Remove Imps
 	-- imp times out - no special event for this?
 	for impID, impData in pairs( WildImps.impInfo ) do
-		if (impData["time"] + WildImps.TTL < ets) or impData["casts"] == 0 then
+		if (impData["time"] < ets) or impData["casts"] == 0 then
 			WildImps.impInfo[impID] = nil
 			WildImps.impCount = WildImps.impCount - 1
 			--if WildImps.impCount == 0 then
