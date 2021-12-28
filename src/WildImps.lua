@@ -11,7 +11,7 @@ WildImps.impInfo = {}
 WildImps.impCount = 0
 WildImps.maxImps = 3
 WildImps.summonCount = 0
-WildImps.TTLBySpell = {[104317]=40, [279910]=24}
+WildImps.TTLBySpell = {[104317]=40, [279910]=14}
 
 -- Support code
 function WildImps.Print( msg, showName)
