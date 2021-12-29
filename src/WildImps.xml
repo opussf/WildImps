@@ -8,7 +8,11 @@
 			<AbsDimension x="200" y="12"/>
 		</Size>
 		<Anchors>
-			<Anchor point="TOPLEFT"/>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="200" y="0"/>
+				</Offset>
+			</Anchor>
 		</Anchors>
 		<Frames>
 			<StatusBar name="WildImps_ImpCountBar" inherits="TextStatusBar">
