@@ -1,4 +1,4 @@
-## Title: WildImps v@VERSION@
+## Title: WildImps
 ## Interface: @INTERFACE@
 ## Notes: Track the number of WildImps (@VERSION@)
 ## Author: sistersally of hyjal

@@ -25,7 +25,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="LOW">
-						<FontString name="WildImps_ImpCountBarText" inherits="GameFontNormal" wraponspaces="false">
+						<FontString name="WildImps_ImpCountBarText" inherits="GameFontNormal">
 							<Anchors>
 								<Anchor point="CENTER">
 								</Anchor>
