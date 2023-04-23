@@ -29,8 +29,8 @@ function WildImps.OnLoad()
 end
 function WildImps.PLAYER_ENTERING_WORLD()
 	WildImpsFrame:UnregisterEvent( "PLAYER_ENTERING_WORLD" )
-	WildImps.class = UnitClass( "player" )
-	if WildImps.class == "Warlock" then
+	WildImps.class, _, classindex = UnitClass( "player" )
+	if classindex == 9 then
 		WildImps.playerGUID = UnitGUID( "player" )
 		WildImpsFrame:RegisterEvent( "PLAYER_SPECIALIZATION_CHANGED" )
 		if GetSpecialization() == 2 then  -- 2 = Demo
