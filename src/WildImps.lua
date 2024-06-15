@@ -40,7 +40,7 @@ function WildImps.PLAYER_ENTERING_WORLD()
 		end
 	else
 		WildImps.Print( "Silly "..WildImps.class..", you are not a Warlock." )
-		DisableAddOn( WILDIMPS_SLUG )
+		DisableAddOn( WILDIMPS_SLUG, UnitName("player") )
 	end
 end
 
