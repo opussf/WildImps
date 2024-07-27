@@ -4,8 +4,8 @@ WILDIMPS_MSG_ADDONNAME = GetAddOnMetadata( WILDIMPS_SLUG, "Title" )
 WILDIMPS_MSG_AUTHOR = GetAddOnMetadata( WILDIMPS_SLUG, "Author" )
 WILDIMPS_MSG_VERSION = GetAddOnMetadata( WILDIMPS_SLUG, "Version" )
 
-COLOR_RED = "|cffff0000";
-COLOR_END = "|r";
+COLOR_RED = "|cffff0000"
+COLOR_END = "|r"
 
 WildImps.impInfo = {}
 WildImps.impCount = 0
